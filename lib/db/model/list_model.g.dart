@@ -20,9 +20,9 @@ class ListModelAdapter extends TypeAdapter<ListModel> {
       name: fields[1] as String,
       age: fields[2] as String,
       clas: fields[3] as String,
+      place: fields[5] as String,
       id: fields[0] as int?,
       image: fields[4] as dynamic,
-      place: fields[5] as String,
     );
   }
 

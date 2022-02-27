@@ -1,11 +1,16 @@
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:students/addhome.dart';
+import 'package:students/widgets/home.dart';
+import 'package:students/controller/updateController.dart';
 import 'package:students/db/model/list_model.dart';
 
-class Update extends StatefulWidget {
-  dynamic name, age, clas, index, box2, place;
-
+class Update extends StatelessWidget {
+  dynamic name, age, clas, index, box2, place,image;
+  final formKey = GlobalKey<FormState>();
   Update(
       {Key? key,
       this.name,
@@ -13,39 +18,37 @@ class Update extends StatefulWidget {
       this.clas,
       this.index,
       this.box2,
-      this.place})
+      this.place,
+      this.image})
       : super(key: key);
 
   @override
-  _UpdateState createState() => _UpdateState();
-}
-
-class _UpdateState extends State<Update> {
-  final formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
+    UpdateController controller = Get.put(UpdateController());
     return Scaffold(
       body: Form(
         key: formKey,
         child: ListView(
           children: [
             Padding(padding: EdgeInsets.all(20)),
-            TextButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.image),
-                label: Text('select image')),
+            Builder(builder: (context){
+                final Imagedata = Hive.box<ListModel>('student');
+                final images = Imagedata.getAt(index);
+                return
+                GestureDetector(
+                  onTap: () =>  controller.pickImage(images!),
+                        child: Center(child: Text("Change Image",style: TextStyle(color: Colors.black,fontSize: 19),)),
+                       );
+            }),
+            SizedBox(height: 30,),
             Builder(builder: (context) {
               final data = Hive.box<ListModel>('student');
-              final records = data.getAt(widget.index);
+              final records = data.getAt(index);
               return TextFormField(
                 onChanged: (value) {
-                  setState(() {
-                    records?.name = value;
-                    records!.save();
-                  });
+                  controller.settingName(records!, value);
                 },
-                initialValue: widget.name,
+                initialValue: name,
                 validator: (value) {
                   if (value!.isEmpty || value == null) {
                     return '*required';
@@ -69,16 +72,13 @@ class _UpdateState extends State<Update> {
             Builder(
               builder: (context) {
                 var list = Hive.box<ListModel>('student');
-                var fdata = list.getAt(widget.index);
+                var fdata = list.getAt(index);
                 return TextFormField(
                   onChanged: (value) {
-                    setState(() {
-                      fdata?.age = value;
-                      fdata!.save();
-                    });
+                    controller.settingAge(fdata!, value);
                   },
                   keyboardType: TextInputType.number,
-                  initialValue: widget.age,
+                  initialValue: age,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 30),
                     label: Text(
@@ -103,14 +103,11 @@ class _UpdateState extends State<Update> {
             ),
             Builder(builder: (context) {
               var sdata = Hive.box<ListModel>('student');
-              var agedata = sdata.getAt(widget.index);
+              var agedata = sdata.getAt(index);
               return TextFormField(
-                initialValue: widget.clas,
+                initialValue: clas,
                 onChanged: (value) {
-                  setState(() {
-                    agedata?.clas = value;
-                    agedata!.save();
-                  });
+                  controller.settingClas(agedata!, value);
                 },
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 30),
@@ -135,14 +132,11 @@ class _UpdateState extends State<Update> {
             ),
             Builder(builder: (context) {
               var daa = Hive.box<ListModel>('student');
-              var placedata = daa.getAt(widget.index);
+              var placedata = daa.getAt(index);
               return TextFormField(
-                initialValue: widget.place,
+                initialValue: place,
                 onChanged: (value) {
-                  setState(() {
-                    placedata?.place = value;
-                    placedata!.save();
-                  });
+                  controller.settingPlace(placedata!, value);
                 },
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 30),
@@ -173,9 +167,7 @@ class _UpdateState extends State<Update> {
                       primary: Colors.red,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (ctx) => Add()),
-                          (route) => false);
+                      Get.off(Add());
                     },
                     child: Text('cancel')),
                 SizedBox(
