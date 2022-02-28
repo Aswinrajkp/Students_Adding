@@ -32,9 +32,11 @@ class ScreenController extends GetxController {
     // TODO: implement onInit
     super.onInit();
   }
+ 
 
   Future pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+     try {
+     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     final imagepath = await getApplicationDocumentsDirectory();
     final photo = File('${imagepath.path}/${image!.name}');
      File(image.path).copy(photo.path);
@@ -46,6 +48,11 @@ class ScreenController extends GetxController {
          usableImage = (photo.path);
          update();
             }
+  } catch (e) {
+    print("couldn't fetch Image $e");
+  }
+
+   
   }
  @override
   void dispose() {

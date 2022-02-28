@@ -19,22 +19,31 @@ class Add extends StatelessWidget {
     getstudent();
     return GetBuilder<ScreenController>(
         builder: (controller) => Scaffold(
-          backgroundColor: Colors.black,
+              backgroundColor: Colors.black,
               appBar: AppBar(
                 backgroundColor: Colors.black,
                 title: TextField(
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600),
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.search,color: Colors.white,),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
                     hintText: 'Students',
-                    hintStyle: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.w700),
+                    hintStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700),
                   ),
                   onChanged: (value) => controller.filterStudents(value),
                 ),
-               
               ),
-              floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
               floatingActionButton: floatingAction(),
               body: ValueListenableBuilder(
                 valueListenable: studentlistNo,
@@ -57,8 +66,8 @@ class Add extends StatelessWidget {
                               child: ListTile(
                                 leading: CircleAvatar(
                                   radius: 38,
-                                  backgroundImage:
-                                      backgroundImage(studentlist[index2].image),
+                                  backgroundImage: backgroundImage(
+                                      studentlist[index2].image),
                                 ),
                                 onTap: () {
                                   goingDetails(studentlist, index2);
@@ -66,7 +75,8 @@ class Add extends StatelessWidget {
                                 title: Text(
                                   controller.foundStudents[index].name,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                       color: Colors.white),
                                 ),
                                 textColor: Colors.black,
@@ -92,13 +102,17 @@ class Add extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () {
         Get.to(AddingStudent());
+        Get.delete<ScreenController>();
       },
       backgroundColor: Colors.white,
-      child: Icon(Icons.add,color: Colors.black,),
+      child: Icon(
+        Icons.add,
+        color: Colors.black,
+      ),
     );
   }
 
-  goingUpdate(index2) {
+  goingUpdate(index2, controller) {
     Get.to(Update(
       name: controller.foundStudents[index2].name,
       age: controller.foundStudents[index2].age,
@@ -129,49 +143,42 @@ class Add extends StatelessWidget {
   }
 
   wrapWidget(index2, context) {
-    return Wrap(
-      spacing: 10.0,
-      children: [
-        IconButton(
+    return GetBuilder<ScreenController>(builder: (controller) {
+      return Wrap(
+        spacing: 10.0,
+        children: [
+          IconButton(
             onPressed: () {
-              goingUpdate(index2);
+              goingUpdate(index2, controller);
             },
-            icon: Icon(Icons.edit),color: Colors.grey,),
-        IconButton(
-            onPressed: () {
-              Get.defaultDialog(
-                title: 'Delete',
-                middleText: 'Are you sure',
-                cancel: TextButton(onPressed: (){Get.back();}, child: Text("cancel")),
-                confirm: TextButton(onPressed: (){delete(index2, context);}, child: Text("Delete",style: TextStyle(color: Colors.red),))
-              );
-              // showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return AlertDialog(
-              //         title: Text("Delete"),
-              //         content: Text('Are you sure ?'),
-              //         actions: <Widget>[
-              //           TextButton(
-              //             onPressed: () {
-              //               Navigator.pop(context);
-              //             },
-              //             child: Text("No"),
-              //           ),
-              //           TextButton(
-              //               onPressed: () {
-              //                 
-              //               },
-              //               child: Text('Yes'))
-              //         ],
-              //       );
-              //     });
-            },
-            icon: Icon(
-              Icons.delete,
-              color: Colors.red,
-            )),
-      ],
-    );
+            icon: Icon(Icons.edit),
+            color: Colors.grey,
+          ),
+          IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                    title: 'Delete',
+                    middleText: 'Are you sure',
+                    cancel: TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text("cancel")),
+                    confirm: TextButton(
+                        onPressed: () {
+                          delete(index2, context);
+                        },
+                        child: Text(
+                          "Delete",
+                          style: TextStyle(color: Colors.red),
+                        )));
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              )),
+        ],
+      );
+    });
   }
 }
