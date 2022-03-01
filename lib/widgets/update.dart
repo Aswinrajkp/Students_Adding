@@ -105,6 +105,7 @@ class Update extends StatelessWidget {
               var sdata = Hive.box<ListModel>('student');
               var agedata = sdata.getAt(index);
               return TextFormField(
+                 keyboardType: TextInputType.number,
                 initialValue: clas,
                 onChanged: (value) {
                   controller.settingClas(agedata!, value);

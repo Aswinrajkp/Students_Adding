@@ -17,7 +17,6 @@ class AddingStudent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenController controller = Get.put(ScreenController());
-    getstudent();
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -120,6 +119,7 @@ class AddingStudent extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: clascontroller,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 30),
@@ -214,7 +214,6 @@ class AddingStudent extends StatelessWidget {
           place: place);
       addstudent(details);
       Get.back();
-    //  Get.delete<>();
     }
   }
 }
